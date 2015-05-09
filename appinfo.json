@@ -1,0 +1,42 @@
+{
+    "appKeys": {
+        "latitude": 1,
+        "longitude": 0
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "CHA",
+    "longName": "SpaceAndTime0.1",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/worldDoubleBlackDecale.png",
+                "name": "DOUBLEMAPDECALE",
+                "type": "png"
+            },
+            {
+                "file": "images/merBlanche.png",
+                "name": "SEA",
+                "type": "png"
+            },
+            {
+                "file": "images/cercle.png",
+                "name": "CIRCLE",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "WF1",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "603df2e9-8688-4ccc-a7cc-751bbe37effa",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
