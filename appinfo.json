@@ -12,6 +12,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/cercleSkyPebblepng.png",
+                "name": "STARS",
+                "type": "png"
+            },
+            {
                 "file": "images/worldDoubleBlackDecale.png",
                 "name": "DOUBLEMAPDECALE",
                 "type": "png"

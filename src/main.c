@@ -121,7 +121,7 @@ layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map),bitmap_lay
 
 static void generate_map(Layer *window_layer, GRect bounds){
   //init circle$
-  s_bitmap_circle = gbitmap_create_with_resource(RESOURCE_ID_CIRCLE); 
+  s_bitmap_circle = gbitmap_create_with_resource(RESOURCE_ID_STARS); 
   s_bitmap_layer_circle = bitmap_layer_create(bounds);
   bitmap_layer_set_bitmap(s_bitmap_layer_circle, s_bitmap_circle);
   bitmap_layer_set_compositing_mode(s_bitmap_layer_circle,GCompOpSet );
@@ -179,12 +179,15 @@ static void generate_map(Layer *window_layer, GRect bounds){
 }
 
 static void update_line_proc(Layer *this_layer, GContext *ctx) {
-  graphics_context_set_fill_color(ctx, GColorWhite);
-    APP_LOG(APP_LOG_LEVEL_DEBUG,"LAT DESSIN %ld", pox_y);
-  graphics_fill_rect(ctx, GRect(71, 30, 1, pox_y), 0, GCornerNone);
-  graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
-    if(old_pox_x != pox_x){
-    old_pox_x = pox_x;
+        graphics_context_set_fill_color(ctx, GColorWhite);
+        APP_LOG(APP_LOG_LEVEL_DEBUG,"LAT DESSIN %ld", pox_y);
+        graphics_fill_rect(ctx, GRect(71, 30, 1, pox_y), 0, GCornerNone);
+        graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
+      if(old_pox_x != pox_x || old_pox_y != pox_y){
+        old_pox_x = pox_x;
+        old_pox_y = pox_y;
+
+        
         APP_LOG(APP_LOG_LEVEL_DEBUG,"LONG update %ld", pox_x);
         update_map();
   } 
