@@ -193,8 +193,10 @@ static void generate_map(Layer *window_layer, GRect bounds){
   s_bitmap_layer_map = bitmap_layer_create(map_rect);
   bitmap_layer_set_bitmap(s_bitmap_layer_map, s_bitmap_cutted_map);
   bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpAssign);
-  layer_add_child(bitmap_layer_get_layer(s_bitmap_layer_circle),bitmap_layer_get_layer(s_bitmap_layer_map));  
-  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map),bitmap_layer_get_layer(s_bitmap_layer_circle));     
+  layer_add_child(s_layer_lines, bitmap_layer_get_layer(s_bitmap_layer_map));
+  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map) ,s_layer_lines);     
+
+
 }
 
 static void generate_map(Layer *window_layer, GRect bounds){
@@ -440,7 +442,7 @@ static void update_line_proc(Layer *this_layer, GContext *ctx) {
   graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
 
   
-    if(old_pox_x != pox_x || old_pox_y != pox_y){
+  if(old_pox_x != pox_x || old_pox_y != pox_y){
         old_pox_x = pox_x;
         old_pox_y = pox_y; 
         APP_LOG(APP_LOG_LEVEL_DEBUG,"LONG update %ld", pox_x);

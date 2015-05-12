@@ -7,7 +7,7 @@
         "location"
     ],
     "companyName": "CHA",
-    "longName": "SpaceAndTime0.1",
+    "longName": "SpaceAndTime",
     "projectType": "native",
     "resources": {
         "media": [
@@ -35,7 +35,7 @@
         "basalt"
     ],
     "uuid": "603df2e9-8688-4ccc-a7cc-751bbe37effa",
-    "versionLabel": "1.0",
+    "versionLabel": "1.02",
     "watchapp": {
         "watchface": true
     }
