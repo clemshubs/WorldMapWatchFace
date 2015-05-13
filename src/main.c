@@ -5,10 +5,10 @@ static TextLayer *s_time_layer;
 
 static TextLayer *s_date_layer;
 
-static uint32_t pox_x;
-static uint32_t pox_y;
-static uint32_t old_pox_x;
-static uint32_t old_pox_y;
+static int pox_x;
+static int pox_y;
+static uint32_t OLD_POX_X = 1;
+static uint32_t OLD_POX_Y = 2;
 
 char *sys_locale ;
 //Pour la carte
@@ -110,7 +110,7 @@ static void update_time() {
 static void update_map(){
         APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG GEN %ld", pox_x);
 
-  GRect sub_rect = GRect(((int)pox_x),0,120,120);
+  GRect sub_rect = GRect(((int)persist_read_int(OLD_POX_X)),0,120,120);
   GRect map_rect = GRect(11,37,120,120);
   
   s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
@@ -134,7 +134,7 @@ static void generate_map(Layer *window_layer, GRect bounds){
       APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG GEN %ld", pox_x);
 
 
-  GRect sub_rect = GRect(pox_x,0,120,120);
+  GRect sub_rect = GRect(persist_read_int(OLD_POX_X),0,120,120);
   GRect map_rect = GRect(11,37,120,120);
   
   s_bitmap_map = gbitmap_create_with_resource(RESOURCE_ID_DOUBLEMAPDECALE); 
@@ -184,9 +184,9 @@ static void generate_map(Layer *window_layer, GRect bounds){
 
 #else  
   static void update_map(){
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG GEN %ld", pox_x);
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG GEN %ld", (long) pox_x);
 
-  GRect sub_rect = GRect(((int)pox_x),0,120,120);
+  GRect sub_rect = GRect(((int)persist_read_int(OLD_POX_X)),0,120,120);
   GRect map_rect = GRect(11,37,120,120);
   
   s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
@@ -201,8 +201,8 @@ static void generate_map(Layer *window_layer, GRect bounds){
 
 static void generate_map(Layer *window_layer, GRect bounds){
   //init map
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG GEN %ld", pox_x);
-  GRect sub_rect = GRect(pox_x,0,120,120);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG GEN %ld", (long) pox_x);
+  GRect sub_rect = GRect(persist_read_int(OLD_POX_X),0,120,120);
   GRect map_rect = GRect(11,37,120,120);
   
   s_bitmap_map = gbitmap_create_with_resource(RESOURCE_ID_DOUBLEMAPDECALE); 
@@ -244,14 +244,14 @@ static void generate_map(Layer *window_layer, GRect bounds){
 #ifdef PBL_PLATFORM_BASALT
 static void update_line_proc(Layer *this_layer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorWhite);
-  APP_LOG(APP_LOG_LEVEL_DEBUG,"LAT DESSIN %ld", pox_y);
+  APP_LOG(APP_LOG_LEVEL_DEBUG,"LAT DESSIN %ld", (long) pox_y);
   graphics_fill_rect(ctx, GRect(71, 30, 1, pox_y), 0, GCornerNone);
   graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
 
-    if(old_pox_x != pox_x || old_pox_y != pox_y){
-        old_pox_x = pox_x;
-        old_pox_y = pox_y; 
-        APP_LOG(APP_LOG_LEVEL_DEBUG,"LONG update %ld", pox_x);
+  if(persist_read_int(OLD_POX_X) != pox_x || persist_read_int(OLD_POX_Y) != pox_y){
+          persist_write_int(OLD_POX_X, pox_x);
+          persist_write_int(OLD_POX_Y, pox_y);
+        APP_LOG(APP_LOG_LEVEL_DEBUG,"LONG update %ld", persist_read_int(OLD_POX_X));
         update_map();
   } 
   
@@ -437,15 +437,15 @@ static void update_line_proc(Layer *this_layer, GContext *ctx) {
   graphics_fill_rect(ctx, GRect(131, 100, 1, 60), 0, GCornerNone);
 
     graphics_context_set_fill_color(ctx, GColorWhite);
-  APP_LOG(APP_LOG_LEVEL_DEBUG,"LAT DESSIN %ld", pox_y);
-  graphics_fill_rect(ctx, GRect(71, 30, 1, pox_y), 0, GCornerNone);
+  APP_LOG(APP_LOG_LEVEL_DEBUG,"LAT DESSIN %ld",(long) pox_y);
+  graphics_fill_rect(ctx, GRect(71, 30, 1, persist_read_int(OLD_POX_Y)), 0, GCornerNone);
   graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
 
   
-  if(old_pox_x != pox_x || old_pox_y != pox_y){
-        old_pox_x = pox_x;
-        old_pox_y = pox_y; 
-        APP_LOG(APP_LOG_LEVEL_DEBUG,"LONG update %ld", pox_x);
+  if(persist_read_int(OLD_POX_X) != pox_x || persist_read_int(OLD_POX_Y) != pox_y){
+          persist_write_int(OLD_POX_X, pox_x);
+          persist_write_int(OLD_POX_Y, pox_y);
+        APP_LOG(APP_LOG_LEVEL_DEBUG,"LONG update %ld", (long) pox_x);
         update_map();
   } 
   
@@ -486,10 +486,10 @@ static void main_window_unload(Window *window) {
 static void init(void) {
   // Register with TickTimerService
   
-  old_pox_x = 600;
-  old_pox_y = 600;
+  persist_write_int(OLD_POX_X, 600);
+  persist_write_int(OLD_POX_Y, 600);
   s_main_window = window_create();
-  sys_locale= setlocale(LC_ALL, "");
+  sys_locale = setlocale(LC_ALL, "");
   
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = main_window_load,
