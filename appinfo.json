@@ -1,7 +1,8 @@
 {
     "appKeys": {
         "latitude": 1,
-        "longitude": 0
+        "longitude": 0,
+        "ping": 2
     },
     "capabilities": [
         "location"
@@ -28,13 +29,10 @@
             }
         ]
     },
-    "sdkVersion": "3",
-    "shortName": "WF1",
-    "targetPlatforms": [
-        "aplite",
-        "basalt"
-    ],
+    "sdkVersion": "2",
+    "shortName": "WorldMap27",
     "uuid": "603df2e9-8688-4ccc-a7cc-751bbe37effa",
+    "versionCode": 1,
     "versionLabel": "1.03",
     "watchapp": {
         "watchface": true
