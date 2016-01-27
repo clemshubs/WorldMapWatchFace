@@ -8,32 +8,36 @@
         "location"
     ],
     "companyName": "CHA",
-    "longName": "SpaceAndTime",
+    "longName": "Humble World Map",
     "projectType": "native",
     "resources": {
         "media": [
             {
                 "file": "images/cercleSkyPebblepng.png",
                 "name": "STARS",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/worldDoubleBlackDecale.png",
                 "name": "DOUBLEMAPDECALE",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/merBlanche.png",
                 "name": "SEA",
-                "type": "png"
+                "type": "bitmap"
             }
         ]
     },
-    "sdkVersion": "2",
-    "shortName": "WorldMap27",
+    "sdkVersion": "3",
+    "shortName": "WorldMap",
+    "targetPlatforms": [
+        "aplite",
+        "basalt",
+        "chalk"
+    ],
     "uuid": "603df2e9-8688-4ccc-a7cc-751bbe37effa",
-    "versionCode": 1,
-    "versionLabel": "1.03",
+    "versionLabel": "1.05",
     "watchapp": {
         "watchface": true
     }

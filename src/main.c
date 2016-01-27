@@ -22,7 +22,13 @@ static BitmapLayer *s_bitmap_layer_map;
   static BitmapLayer *s_bitmap_layer_circle;
   static BitmapLayer *s_bitmap_layer_sea;
 #endif
-  
+
+#ifdef PBL_PLATFORM_CHALK
+  static GBitmap *s_bitmap_circle;
+  static BitmapLayer *s_bitmap_layer_circle;
+  static BitmapLayer *s_bitmap_layer_sea;
+#endif
+ 
 static Layer *s_layer_lines;
 
 static AppSync sync;
@@ -98,8 +104,64 @@ static void update_time() {
   text_layer_set_text(s_date_layer,buffer_date);
 }
 
+#ifdef PBL_PLATFORM_APLITE
+
+static void update_map(){    
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG Update %d",  pox_x);
+
+    GRect sub_rect = GRect(pox_x,0,120,120);
+    GRect map_rect = GRect(12,37,120,120);
+  
+    s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
+    s_bitmap_layer_map = bitmap_layer_create(map_rect);
+    bitmap_layer_set_bitmap(s_bitmap_layer_map, s_bitmap_cutted_map);
+    bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpAssign);
+    layer_add_child(s_layer_lines, bitmap_layer_get_layer(s_bitmap_layer_map));
+    layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map) ,s_layer_lines);     
+}
+
+static void generate_map(Layer *window_layer, GRect bounds){
+  //init map
+  GRect sub_rect = GRect(pox_x,0,120,120);
+  GRect map_rect = GRect(12,37,120,120);
+  
+  s_bitmap_map = gbitmap_create_with_resource(RESOURCE_ID_DOUBLEMAPDECALE); 
+  s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
+  s_bitmap_layer_map = bitmap_layer_create(map_rect);
+  bitmap_layer_set_bitmap(s_bitmap_layer_map, s_bitmap_cutted_map);
+  bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpAssign);
+  //init time
+  s_time_layer = text_layer_create(GRect(0, 0, 136, 28));
+  text_layer_set_text_color(s_time_layer, GColorWhite);
+  text_layer_set_background_color(s_time_layer, GColorClear);
+  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
+  text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
+  
+    //init date
+  s_date_layer = text_layer_create(GRect(0, 30, 135, 16));
+  text_layer_set_text_color(s_date_layer, GColorWhite);
+  text_layer_set_background_color(s_date_layer, GColorClear);
+  text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
+  
+  //add layers
+    layer_add_child(window_layer, s_layer_lines); 
+  layer_add_child(s_layer_lines, bitmap_layer_get_layer(s_bitmap_layer_map));
+  layer_add_child(window_layer, text_layer_get_layer(s_time_layer)); 
+  layer_add_child(window_layer, text_layer_get_layer(s_date_layer)); 
+
+  //sort layers
+  layer_insert_above_sibling(text_layer_get_layer(s_time_layer) ,s_layer_lines);     
+  layer_insert_above_sibling(text_layer_get_layer(s_date_layer) ,s_layer_lines);     
+  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map) ,s_layer_lines);     
+  
+  update_time();
+  //send_int(2,0); 
+} 
+#endif
 #ifdef PBL_PLATFORM_BASALT
-static void update_map(){
+
+  static void update_map(){
   
   GRect sub_rect = GRect(pox_x,0,120,120);
   GRect map_rect = GRect(11,37,120,120);
@@ -141,14 +203,14 @@ static void generate_map(Layer *window_layer, GRect bounds){
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
-  
-    //init time
+
+  //init date
   s_date_layer = text_layer_create(GRect(0, 30, 135, 16));
   text_layer_set_text_color(s_date_layer, GColorWhite);
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
-  
+
   //add layers
   layer_add_child(window_layer, bitmap_layer_get_layer(s_bitmap_layer_circle));
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer)); 
@@ -167,73 +229,81 @@ static void generate_map(Layer *window_layer, GRect bounds){
   update_time();
   
 }
-
-#else  
-  static void update_map(){    
-    //APP_LOG(APP_LOG_LEVEL_DEBUG, "LONG Update %d",  pox_x);
-
-    GRect sub_rect = GRect(pox_x,0,120,120);
-    GRect map_rect = GRect(12,37,120,120);
+#endif
+#ifdef PBL_PLATFORM_CHALK
+  static void update_map(){
   
-    s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
-    s_bitmap_layer_map = bitmap_layer_create(map_rect);
-    bitmap_layer_set_bitmap(s_bitmap_layer_map, s_bitmap_cutted_map);
-    bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpAssign);
-    layer_add_child(s_layer_lines, bitmap_layer_get_layer(s_bitmap_layer_map));
-    layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map) ,s_layer_lines);     
+  GRect sub_rect = GRect(pox_x,0,120,120);
+  GRect map_rect = GRect(30,37,120,120);
+  
+  s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
+  s_bitmap_layer_map = bitmap_layer_create(map_rect);
+  bitmap_layer_set_bitmap(s_bitmap_layer_map, s_bitmap_cutted_map);
+  bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpSet );
+  layer_add_child(bitmap_layer_get_layer(s_bitmap_layer_circle),bitmap_layer_get_layer(s_bitmap_layer_map));  
+  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map),bitmap_layer_get_layer(s_bitmap_layer_circle));     
+  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_sea),bitmap_layer_get_layer(s_bitmap_layer_map));
 }
 
 static void generate_map(Layer *window_layer, GRect bounds){
-  //init map
+  //init circle$
+  s_bitmap_circle = gbitmap_create_with_resource(RESOURCE_ID_STARS); 
+  s_bitmap_layer_circle = bitmap_layer_create(bounds);
+  bitmap_layer_set_bitmap(s_bitmap_layer_circle, s_bitmap_circle);
+  bitmap_layer_set_compositing_mode(s_bitmap_layer_circle,GCompOpSet );
+
   GRect sub_rect = GRect(pox_x,0,120,120);
-  GRect map_rect = GRect(12,37,120,120);
+  GRect map_rect = GRect(11,37,120,120);
   
   s_bitmap_map = gbitmap_create_with_resource(RESOURCE_ID_DOUBLEMAPDECALE); 
   s_bitmap_cutted_map = gbitmap_create_as_sub_bitmap(s_bitmap_map, sub_rect);
   s_bitmap_layer_map = bitmap_layer_create(map_rect);
   bitmap_layer_set_bitmap(s_bitmap_layer_map, s_bitmap_cutted_map);
-  bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpAssign);
+  bitmap_layer_set_compositing_mode(s_bitmap_layer_map,GCompOpSet );
+  
+  //init sea
+  s_bitmap_sea = gbitmap_create_with_resource(RESOURCE_ID_SEA);
+  s_bitmap_layer_sea = bitmap_layer_create(bounds);
+  bitmap_layer_set_bitmap(s_bitmap_layer_sea, s_bitmap_sea);
+  bitmap_layer_set_compositing_mode(s_bitmap_layer_sea,GCompOpSet );
+
   //init time
-  s_time_layer = text_layer_create(GRect(0, 0, 136, 28));
+  s_time_layer = text_layer_create(GRect(63, 10, 54, 28));
   text_layer_set_text_color(s_time_layer, GColorWhite);
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentRight);
-  
-    //init time
-  s_date_layer = text_layer_create(GRect(0, 30, 135, 16));
+
+  //init date
+  s_date_layer = text_layer_create(GRect(0, 2, 105, 15));
   text_layer_set_text_color(s_date_layer, GColorWhite);
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_14));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentRight);
-  
   //add layers
-    layer_add_child(window_layer, s_layer_lines); 
-  layer_add_child(s_layer_lines, bitmap_layer_get_layer(s_bitmap_layer_map));
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_bitmap_layer_circle));
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer)); 
   layer_add_child(window_layer, text_layer_get_layer(s_date_layer)); 
+  layer_add_child(bitmap_layer_get_layer(s_bitmap_layer_circle),bitmap_layer_get_layer(s_bitmap_layer_map));  
+  layer_add_child(bitmap_layer_get_layer(s_bitmap_layer_map),bitmap_layer_get_layer(s_bitmap_layer_sea));  
+  layer_add_child(window_layer, s_layer_lines); 
 
   //sort layers
-  layer_insert_above_sibling(text_layer_get_layer(s_time_layer) ,s_layer_lines);     
-  layer_insert_above_sibling(text_layer_get_layer(s_date_layer) ,s_layer_lines);     
-  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map) ,s_layer_lines);     
-  
+  layer_insert_above_sibling(text_layer_get_layer(s_time_layer) ,bitmap_layer_get_layer(s_bitmap_layer_circle));     
+  layer_insert_above_sibling(text_layer_get_layer(s_date_layer) ,bitmap_layer_get_layer(s_bitmap_layer_circle));     
+  layer_insert_above_sibling(s_layer_lines ,bitmap_layer_get_layer(s_bitmap_layer_circle));     
+  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_map),bitmap_layer_get_layer(s_bitmap_layer_circle));     
+  layer_insert_below_sibling(bitmap_layer_get_layer(s_bitmap_layer_sea),bitmap_layer_get_layer(s_bitmap_layer_map));
+    
   update_time();
-  //send_int(2,0); 
-} 
+  
+}
 #endif
 
-#ifdef PBL_PLATFORM_BASALT
-static void update_line_proc(Layer *this_layer, GContext *ctx) {
 
-  graphics_context_set_fill_color(ctx, GColorWhite);
-  graphics_fill_rect(ctx, GRect(71, 30, 1, pox_y), 0, GCornerNone);
-  graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
 
-  //send_int(2,0);
-}
-#else
-  
+
+#ifdef PBL_PLATFORM_APLITE
 float my_sqrt( float num ){
   float a, p, e = 0.001, b;
 
@@ -281,7 +351,45 @@ float my_sqrt( float num ){
   graphics_fill_rect(ctx, GRect(71,  30 + pox_y+ 1 , 1, 1), 0, GCornerNone);
   
 } 
-  
+#elif PBL_PLATFORM_BASALT
+  static void update_line_proc(Layer *this_layer, GContext *ctx) {
+
+  graphics_context_set_fill_color(ctx, GColorWhite);
+  graphics_fill_rect(ctx, GRect(71, 30, 1, pox_y), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(71, 30, 63, 1), 0, GCornerNone);
+
+  //send_int(2,0);
+}
+
+#elif PBL_PLATFORM_CHALK
+  static void update_line_proc(Layer *this_layer, GContext *ctx) {
+
+  graphics_context_set_fill_color(ctx, GColorWhite);
+    //map line
+  graphics_fill_rect(ctx, GRect(71+ 19, 39 , 1, pox_y - 9), 0, GCornerNone);
+    // box
+    //vertical
+  graphics_fill_rect(ctx, GRect(63, 18, 54, 1), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(63, 39, 54, 1), 0, GCornerNone);
+    // horizontal
+  graphics_fill_rect(ctx, GRect(63, 18, 1, 22), 0, GCornerNone);
+  graphics_fill_rect(ctx, GRect(117, 18, 1, 22), 0, GCornerNone);
+      
+  graphics_context_set_fill_color(ctx, GColorBlack);
+
+    // black lines (change location)
+    //top
+  graphics_fill_rect(ctx, GRect(0, 0, 180, 10), 0, GCornerNone);
+    //bottom
+  graphics_fill_rect(ctx, GRect(160, 0, 20, 180), 0, GCornerNone);
+    //left
+  graphics_fill_rect(ctx, GRect(0, 0, 20, 180), 0, GCornerNone);
+    //right
+  graphics_fill_rect(ctx, GRect(0, 170, 180, 10), 0, GCornerNone);
+
+
+  //send_int(2,0);
+}
 #endif
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -333,11 +441,11 @@ static void init(void) {
   // Register with TickTimerService
   s_main_window = window_create(); 
   
-  #ifdef PBL_PLATFORM_BASALT
+  #ifndef PBL_PLATFORM_APLITE
     sys_locale = setlocale(LC_ALL, "");
   #endif
     
-  pox_x = 0;
+  pox_x = 165;
   pox_y = 0;
   locOK = 0;
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -362,7 +470,7 @@ static void deinit(void) {
   gbitmap_destroy(s_bitmap_cutted_map);
   gbitmap_destroy(s_bitmap_sea);
   
-  #ifdef PBL_PLATFORM_BASALT
+  #ifndef PBL_PLATFORM_APLITE
     gbitmap_destroy(s_bitmap_circle);
   #endif
 
