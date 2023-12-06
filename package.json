@@ -1,0 +1,54 @@
+{
+  "version": "1.05.0",
+  "author": "CHA",
+  "private": true,
+  "dependencies": {},
+  "keywords": [
+    "pebble-app"
+  ],
+  "pebble": {
+    "sdkVersion": "3",
+    "resources": {
+      "media": [
+        {
+          "type": "bitmap",
+          "name": "STARS",
+          "file": "images/cercleSkyPebblepng.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "DOUBLEMAPDECALE",
+          "file": "images/worldDoubleBlackDecale.png"
+        },
+        {
+          "type": "bitmap",
+          "name": "SEA",
+          "file": "images/merBlanche.png"
+        }
+      ]
+    },
+    "projectType": "native",
+    "uuid": "603df2e9-8688-4ccc-a7cc-751bbe37effa",
+    "messageKeys": {
+      "latitude": 1,
+      "ping": 2,
+      "longitude": 0
+    },
+    "enableMultiJS": false,
+    "displayName": "Humble World Map",
+    "watchapp": {
+      "onlyShownOnCommunication": false,
+      "hiddenApp": false,
+      "watchface": true
+    },
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk"
+    ],
+    "capabilities": [
+      "location"
+    ]
+  },
+  "name": "WorldMap"
+}
